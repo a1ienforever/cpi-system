@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import CertificateRequest, Certificate, Revocation, Authority
+
+from apps.certificates.models import CertificateRequest, Authority, Certificate, Revocation
 
 User = get_user_model()
 
@@ -12,14 +13,13 @@ class CertificateRequestSerializer(serializers.ModelSerializer):
         model = CertificateRequest
         fields = [
             "id",
-            "user",
             "user_email",
             "csr_pem",
             "status",
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["status", "created_at", "updated_at"]
+        read_only_fields = ["user", "status", "created_at", "updated_at"]
 
 
 class AuthoritySerializer(serializers.ModelSerializer):

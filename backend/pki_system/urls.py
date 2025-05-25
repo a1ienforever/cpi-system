@@ -23,6 +23,7 @@ from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
 from apps import users
+from apps.certificates.views import CRLView
 
 router = DefaultRouter()
 
@@ -42,6 +43,7 @@ schema_view = get_schema_view(
 api_v1_patterns = [
     path('auth/', include('apps.users.urls')),
     path('certificates/', include('apps.certificates.urls')),
+
 ]
 
 urlpatterns = [
