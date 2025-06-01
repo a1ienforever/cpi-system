@@ -10,7 +10,7 @@ from apps.certificates.serializers import RevocationSerializer
 class RevocationViewSet(CreateModelMixin ,viewsets.GenericViewSet):
     queryset = Revocation.objects.all()
     serializer_class = RevocationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
     @swagger_auto_schema(
         operation_summary="Отозвать сертификат",

@@ -42,6 +42,7 @@ schema_view = get_schema_view(
 
 api_v1_patterns = [
     path('auth/', include('apps.users.urls')),
+
     path('certificates/', include('apps.certificates.urls')),
 
 ]

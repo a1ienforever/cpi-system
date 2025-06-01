@@ -16,8 +16,6 @@ def sign_csr(csr_pem: str, authority: Authority, user) -> Certificate:
     # Проверка корректности CSR
     if not csr.is_signature_valid:
         raise ValueError("Invalid CSR signature")
-
-    # Загружаем приватный ключ УЦ
     with open(authority.key_path, "rb") as f:
         private_key = serialization.load_pem_private_key(f.read(), password=None)
 

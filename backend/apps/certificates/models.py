@@ -22,6 +22,7 @@ class CertificateRequest(models.Model):
         ('pending', 'В ожидании'),
         ('approved', 'Одобрен'),
         ('rejected', 'Отклонён'),
+        ('signed', 'Подписан')
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='csr_requests', verbose_name="Пользователь")
@@ -29,6 +30,7 @@ class CertificateRequest(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Статус заявки")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+
 
     def __str__(self):
         return f'CSR #{self.id} пользователя {self.user.email} — {self.status}'

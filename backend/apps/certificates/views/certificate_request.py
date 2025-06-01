@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, permissions, status
@@ -13,6 +14,8 @@ class CertificateRequestViewSet(viewsets.ModelViewSet):
     queryset = CertificateRequest.objects.all().order_by('-created_at')
     serializer_class = CertificateRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user', 'status']
 
     def perform_create(self, serializer):
         # При создании CSR автоматически привязываем к текущему пользователю
@@ -94,7 +97,14 @@ class CertificateRequestViewSet(viewsets.ModelViewSet):
             certificate = sign_csr(csr_obj.csr_pem, ca, csr_obj.user)
             certificate.csr = csr_obj
             certificate.save()
+            csr_obj.status = "signed"
         except Exception as e:
             return Response({"detail": f"Signing error: {e}"}, status=500)
-
         return Response({"detail": "Certificate signed successfully.", "cert_id": certificate.id})
+
+    @swagger_auto_schema()
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+

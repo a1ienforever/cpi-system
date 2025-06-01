@@ -2,7 +2,7 @@ from django.utils import timezone
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import permissions, serializers
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -10,7 +10,7 @@ from apps.certificates.models import Certificate
 from apps.certificates.serializers import CertificateSerializer
 
 
-class CertificateViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
+class CertificateViewSet(RetrieveModelMixin, ListModelMixin, CreateModelMixin, GenericViewSet):
     serializer_class = CertificateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -61,3 +61,9 @@ class CertificateViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
             return Response({"valid": False, "reason": "expired", "expired_at": cert.expires_at})
 
         return Response({"valid": True, "reason": "active"})
+
+    @action(detail=True, methods=["get"])
+    def get_by_scr(self, request, pk=None):
+        certificate = Certificate.objects.filter(csr=pk).first()
+        serializer = CertificateSerializer(certificate)
+        return Response(serializer.data)
